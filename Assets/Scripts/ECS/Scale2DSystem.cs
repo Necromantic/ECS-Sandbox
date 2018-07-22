@@ -4,6 +4,7 @@ using Unity.Mathematics;
 using Unity.Transforms2D;
 using Unity.Transforms;
 using Unity.Jobs;
+using Unity.Burst;
 
 namespace com.binaryfeast.ECS
 {
@@ -17,13 +18,15 @@ namespace com.binaryfeast.ECS
             public ComponentDataArray<Scale2D> scales;
 
             public ComponentDataArray<TransformMatrix> transforms;
-            public int Length;
+
+            [ReadOnly]
+            public readonly int Length;
         }
 
         [Inject]
         TransformGroup transformGroup;
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct TransformGroupJob : IJobParallelFor
         {
             [ReadOnly]
@@ -36,7 +39,7 @@ namespace com.binaryfeast.ECS
                 float2 scale = scales[i].Value;
                 transforms[i] = new TransformMatrix
                 {
-                    Value = math.mul(transforms[i].Value, math.scale(new float3(scale.x, 1, scale.y)))
+                    Value = math.mul(transforms[i].Value, float4x4.scale(new float3(scale.x, 1, scale.y)))
                 };
             }
         }

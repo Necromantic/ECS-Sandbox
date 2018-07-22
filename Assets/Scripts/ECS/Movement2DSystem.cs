@@ -2,13 +2,13 @@
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms2D;
-using Unity.Transforms;
 using Unity.Jobs;
 using UnityEngine;
+using Unity.Burst;
 
 namespace com.binaryfeast.ECS
 {
-    [UnityEngine.ExecuteInEditMode]
+    [ExecuteInEditMode]
     [UpdateBefore(typeof(Transform2DSystem))]
     public class Movement2DSystem : JobComponentSystem
     {
@@ -19,13 +19,14 @@ namespace com.binaryfeast.ECS
 
             public ComponentDataArray<Position2D> positions;
 
-            public int Length;
+            [ReadOnly]
+            public readonly int Length;
         }
 
         [Inject]
         TransformGroup transformGroup;
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct TransformGroupJob : IJobParallelFor
         {
             [ReadOnly]

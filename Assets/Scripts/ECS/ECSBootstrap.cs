@@ -50,7 +50,7 @@ namespace com.binaryfeast.ECS
 
                 entityManager.SetComponentData(entity, new Movement2D
                 {
-                    Value = new float2(Random.value, Random.value)
+                    Value = new float2(Random.value * 2 - 1, Random.value * 2 - 1)
                 });
 
                 entityManager.AddSharedComponentData(entity, sharedSprites[i % sprites.Length]);
